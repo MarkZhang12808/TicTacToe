@@ -13,7 +13,7 @@ void clearboard(char board[3][3]);
 
 int main(){ //main function
   char board[3][3];
-  char coordinate[3];
+  char coordinate[50];
   char playerturn = 'X';
   char play = 'y';
   bool playing = true;
@@ -26,6 +26,7 @@ int main(){ //main function
     while(moves < 10){ //If all squares are filled with no winner, the game is a tie
     int x = 0, y = 0;
     printboard(board);
+    cout << moves << endl;
   cout << "Turn: " << playerturn <<  endl;
   do{ //do while loop takes input and checks if it is valid using checkmove() function, if the input is not valid, asks the user to re-enter
     cout << "Enter a coordinate (ex. a1, b2, c3): " << endl;  
@@ -54,7 +55,8 @@ int main(){ //main function
   }while(checkmove(coordinate, board) == false);
   
   board[x][y] = playerturn; 
-    if(checkwin(board) == true){
+  moves++;
+  if(checkwin(board) == true){
       //if a win occurs after a move is made, the player who made the move is the winner
       cout << playerturn << " wins!" << endl;
 	if(playerturn == 'X'){
@@ -64,6 +66,7 @@ int main(){ //main function
 	  owins++;
 	}
 	ended = true;
+	printboard(board);
 	cout << "X has won: " << xwins << " times" << endl; 
 	cout << "O has won: " << owins << " times" << endl;
 	cout << "would you like to play again? y/n" << endl;
@@ -81,16 +84,22 @@ int main(){ //main function
     }
     else if(checkwin(board) == false && moves == 9){ //if board is full and no one has won, it's a tie
       ended = true;
+      printboard(board);
       cout << "tie!" << endl;
+      cout << "X has won: " << xwins << " times" << endl; 
+      cout << "O has won: " << owins << " times" << endl;
+      cout << "would you like to play again? y/n" << endl;
+      clearboard(board);
       cin >> play;
         if(play == 'n'){
           playing = false;
+	  cout << "cya" << endl;
         }
         else if(play == 'y'){
           playing = true;
 	  cout << '\n' << "-----------------------------------------------------" << '\n' << endl;
         }
-
+	break;
     }
     else if(playerturn == 'X' && ended == false){
       playerturn = 'O';
@@ -98,7 +107,6 @@ int main(){ //main function
     else if(playerturn =='O' && ended == false){
       playerturn = 'X';
     }
-    moves++;
   }
   }
   return 0;
@@ -123,9 +131,12 @@ int main(){ //main function
 }     
 
 
-bool checkmove(char coordinate[3], char board[3][3]){ //checks if move is legal. Returns true if the coordinates are valid and if the board position at those coordinates is empty
+bool checkmove(char coordinate[50], char board[3][3]){ //checks if move is legal. Returns true if the coordinates are valid and if the board position at those coordinates is empty
   bool isvalid = true;
   int x = 0, y = 0;
+  if(strlen(coordinate) > 3){
+    isvalid = false;
+  }
   if(coordinate[1] == '1'){
         x = 0;
       }
